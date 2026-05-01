@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Smart Translation</title>
+  <meta name="description" content="WPS AI Translation Add-in — Translate Chinese documents to English with format preservation" />
+  <link rel="stylesheet" href="taskpane.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- ── Header ──────────────────────────────────────────────── -->
+    <header class="header">
+      <div class="header-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="6" fill="#1a73e8"/>
+          <text x="14" y="20" text-anchor="middle" fill="white" font-size="14" font-family="serif" font-weight="bold">译</text>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h1 class="header-title">AI Smart Translation</h1>
+        <p class="header-subtitle">Powered by LLM</p>
+      </div>
+    </header>
+
+    <!-- ── Language Direction ───────────────────────────────────── -->
+    <div class="lang-direction">
+      <span class="lang-tag lang-source">Chinese</span>
+      <span class="lang-arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8H13M9 4L13 8L9 12" stroke="#1a73e8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="lang-tag lang-target">English</span>
+    </div>
+
+    <!-- ── Config Section ──────────────────────────────────────── -->
+    <section class="card config-section">
+      <label class="config-label" for="serverUrlInput">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:middle;margin-right:4px">
+          <circle cx="7" cy="7" r="6" stroke="#6b7280" stroke-width="1.4"/>
+          <path d="M4.5 7h5M7 4.5v5" stroke="#6b7280" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        Backend Server URL
+      </label>
+      <input
+        id="serverUrlInput"
+        class="config-input"
+        type="url"
+        value="http://localhost:3000"
+        placeholder="http://localhost:3000"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </section>
+
+    <!-- ── Start Button ────────────────────────────────────────── -->
+    <button id="btnStart" class="btn btn-primary" onclick="onStartTranslation()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right:6px;vertical-align:middle">
+        <path d="M3 2.5L13 8L3 13.5V2.5Z" fill="white"/>
+      </svg>
+      Translate Full Document
+    </button>
+
+    <!-- ── Progress Section ────────────────────────────────────── -->
+    <section id="progressSection" class="card progress-section hidden">
+      <div class="progress-header">
+        <span id="progressCounter" class="progress-counter">0 / 0 paragraphs</span>
+        <span id="progressPct" class="progress-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div id="progressBar" class="progress-bar" style="width:0%"></div>
+      </div>
+      <p id="statusDetail" class="status-detail">Initializing...</p>
+    </section>
+
+    <!-- ── Action Buttons ──────────────────────────────────────── -->
+    <div id="actionButtons" class="action-buttons hidden">
+      <button id="btnCancel" class="btn btn-danger hidden" onclick="onCancelTranslation()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-right:4px;vertical-align:middle">
+          <path d="M2 2L12 12M12 2L2 12" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Cancel
+      </button>
+      <button id="btnUndo" class="btn btn-secondary hidden" onclick="onUndoTranslation()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-right:4px;vertical-align:middle">
+          <path d="M2 5H8a4 4 0 0 1 0 8H5" stroke="#374151" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M5 2L2 5L5 8" stroke="#374151" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Undo All
+      </button>
+    </div>
+
+    <!-- ── Result Summary ─────────────────────────────────────── -->
+    <section id="resultSection" class="card result-card hidden">
+      <div class="result-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#059669"/>
+          <path d="M7 12L10 15L17 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="result-text">
+        <p class="result-title">Translation Complete!</p>
+        <p id="resultDetail" class="result-detail">0 paragraphs translated successfully.</p>
+      </div>
+    </section>
+
+    <!-- ── Error Section ──────────────────────────────────────── -->
+    <section id="errorSection" class="card error-card hidden">
+      <div class="error-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="9" fill="#dc2626"/>
+          <path d="M10 6V10M10 14H10.01" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p id="errorMsg" class="error-msg">An unexpected error occurred.</p>
+    </section>
+
+  </div><!-- /.container -->
+
+  <!-- Script loading order matters: util.js must load before taskpane.js -->
+  <script src="util.js"></script>
+  <script src="taskpane.js"></script>
+</body>
+</html>

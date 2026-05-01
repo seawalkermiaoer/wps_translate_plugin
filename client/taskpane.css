@@ -1,0 +1,290 @@
+/* taskpane.css — WPS AI Translation Add-in Styles
+   Design system: clean, modern, matching WPS Office aesthetic.
+   Primary: #1a73e8 | Success: #059669 | Error: #dc2626 | BG: #f9fafb
+*/
+
+/* ─── Reset & Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei",
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #111827;
+  background-color: #f9fafb;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Utility ───────────────────────────────────────────────────────────── */
+.hidden {
+  display: none !important;
+}
+
+/* ─── Container ─────────────────────────────────────────────────────────── */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 16px;
+  min-height: 100vh;
+  max-width: 380px;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header-icon {
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.header-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.header-subtitle {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 1px;
+}
+
+/* ─── Language Direction ────────────────────────────────────────────────── */
+.lang-direction {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.lang-tag {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.lang-source {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.lang-target {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.lang-arrow {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  line-height: 0;
+}
+
+/* ─── Card ──────────────────────────────────────────────────────────────── */
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+/* ─── Config Section ────────────────────────────────────────────────────── */
+.config-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.config-input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-family: "Menlo", "Consolas", monospace;
+  color: #374151;
+  background: #f9fafb;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.config-input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+  background: #ffffff;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────────────── */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  outline: none;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background-color: #1a73e8;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(26, 115, 232, 0.3);
+}
+
+.btn-primary:hover {
+  background-color: #1557b0;
+  box-shadow: 0 2px 6px rgba(26, 115, 232, 0.4);
+}
+
+.btn-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-danger {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.btn-danger:hover {
+  background-color: #fecaca;
+}
+
+/* ─── Action Buttons Row ────────────────────────────────────────────────── */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.action-buttons .btn {
+  flex: 1;
+}
+
+/* ─── Progress Section ──────────────────────────────────────────────────── */
+.progress-section {
+  padding: 14px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-counter {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.progress-pct {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a73e8;
+}
+
+.progress-track {
+  height: 6px;
+  background-color: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #1a73e8 0%, #4a90e2 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  min-width: 0;
+}
+
+.status-detail {
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: center;
+  min-height: 16px;
+}
+
+/* ─── Result Card ───────────────────────────────────────────────────────── */
+.result-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+}
+
+.result-icon {
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.result-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #065f46;
+}
+
+.result-detail {
+  font-size: 12px;
+  color: #047857;
+  margin-top: 2px;
+}
+
+/* ─── Error Card ────────────────────────────────────────────────────────── */
+.error-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.error-icon {
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.error-msg {
+  font-size: 12px;
+  color: #991b1b;
+  line-height: 1.5;
+  word-break: break-word;
+}

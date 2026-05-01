@@ -1,0 +1,11 @@
+{
+  "name": "wps-ai-translate-addin",
+  "version": "1.0.0",
+  "description": "WPS Web Add-in for AI-powered Chinese to English translation with format preservation",
+  "type": "wps",
+  "main": "index.html",
+  "ribbon": "ribbon.xml",
+  "permissions": {
+    "document": "readwrite"
+  }
+}
