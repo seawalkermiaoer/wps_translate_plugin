@@ -1,6 +1,71 @@
 // util.js — Pure utility functions for WPS AI Translation Add-in
 // No side effects. No WPS API calls. Testable in isolation.
 
+// --- Constants & Config ---
+const DEFAULT_API_URL = "http://localhost:3000/api/translate";
+const MAX_RETRIES = 3;
+
+// --- i18n Logic ---
+const i18nDict = {
+  en: {
+    appTitle: "AI Smart Translation",
+    langZh: "Chinese",
+    langEn: "English",
+    backendUrl: "Backend Server URL",
+    projectId: "Project ID",
+    btnFullTranslate: "Translate Full Document",
+    btnPageTranslate: "Translate Page",
+    btnCancel: "Cancel",
+    btnUndo: "Undo All",
+    resultComplete: "Translation Complete!",
+    errProjectIdMissing: "Project ID is required"
+  },
+  zh: {
+    appTitle: "AI 智能翻译",
+    langZh: "中文",
+    langEn: "英文",
+    backendUrl: "后端服务地址",
+    projectId: "项目 ID",
+    btnFullTranslate: "翻译全文",
+    btnPageTranslate: "翻译指定页",
+    btnCancel: "取消",
+    btnUndo: "撤销全部",
+    resultComplete: "翻译完成！",
+    errProjectIdMissing: "请输入项目 ID"
+  }
+};
+
+let currentLang = 'en';
+
+function initI18n() {
+  try {
+    // 2052 is the language code for Simplified Chinese in WPS/Office
+    if (wps.Application.Language === 2052) {
+      currentLang = 'zh';
+    } else {
+      currentLang = 'en';
+    }
+  } catch (e) {
+    currentLang = 'en';
+  }
+  translateUI();
+}
+
+function translateUI() {
+  const dict = i18nDict[currentLang];
+  const elements = document.querySelectorAll('[data-i18n]');
+  for (let i = 0; i < elements.length; i++) {
+    const key = elements[i].getAttribute('data-i18n');
+    if (dict[key]) {
+      elements[i].textContent = dict[key];
+    }
+  }
+}
+
+function getI18nString(key) {
+  return i18nDict[currentLang][key] || key;
+}
+
 /**
  * Parses a tagged string like "Using <r1>cloud computing</r1> to reduce costs."
  * Returns the plain text and an array of tag positions within the plain text.
@@ -184,6 +249,7 @@ function updateProgress(current, total, statusText) {
 
   var counterEl = document.getElementById("progressCounter");
   if (counterEl) counterEl.textContent = current + " / " + total + " paragraphs";
+
 
   var detailEl = document.getElementById("statusDetail");
   if (detailEl && statusText !== undefined) detailEl.textContent = statusText;
