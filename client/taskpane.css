@@ -115,6 +115,10 @@ body {
   margin-bottom: 6px;
 }
 
+.mt-2 {
+  margin-top: 12px;
+}
+
 .config-input {
   width: 100%;
   border: 1px solid #d1d5db;
@@ -184,6 +188,49 @@ body {
 
 .btn-danger:hover {
   background-color: #fecaca;
+}
+
+.btn-primary-outline {
+  background-color: transparent;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+}
+
+.btn-primary-outline:hover {
+  background-color: #f0fdf4;
+  background-color: rgba(26, 115, 232, 0.05);
+}
+
+/* ─── Start Buttons Layout ──────────────────────────────────────────────── */
+.start-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.page-translate-group {
+  display: flex;
+  gap: 8px;
+}
+
+.page-input {
+  width: 60px;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 4px;
+  font-size: 13px;
+  color: #374151;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.page-input:focus {
+  border-color: #1a73e8;
+}
+
+.page-translate-group .btn {
+  flex: 1;
 }
 
 /* ─── Action Buttons Row ────────────────────────────────────────────────── */

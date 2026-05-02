@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Smart Translation</title>
-  <meta name="description" content="WPS AI Translation Add-in — Translate Chinese documents to English with format preservation" />
+  <title data-i18n="appTitle">AI Smart Translation</title>
+  <meta name="description" content="WPS AI Translation Add-in" />
   <link rel="stylesheet" href="taskpane.css" />
 </head>
-<body>
+<body onload="initI18n()">
   <div class="container">
 
     <!-- ── Header ──────────────────────────────────────────────── -->
@@ -19,49 +19,81 @@
         </svg>
       </div>
       <div class="header-text">
-        <h1 class="header-title">AI Smart Translation</h1>
-        <p class="header-subtitle">Powered by LLM</p>
+        <h1 class="header-title" data-i18n="appTitle">AI Smart Translation</h1>
       </div>
     </header>
 
     <!-- ── Language Direction ───────────────────────────────────── -->
     <div class="lang-direction">
-      <span class="lang-tag lang-source">Chinese</span>
+      <span class="lang-tag lang-source" data-i18n="langZh">Chinese</span>
       <span class="lang-arrow">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M3 8H13M9 4L13 8L9 12" stroke="#1a73e8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
-      <span class="lang-tag lang-target">English</span>
+      <span class="lang-tag lang-target" data-i18n="langEn">English</span>
     </div>
 
     <!-- ── Config Section ──────────────────────────────────────── -->
     <section class="card config-section">
-      <label class="config-label" for="serverUrlInput">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:middle;margin-right:4px">
-          <circle cx="7" cy="7" r="6" stroke="#6b7280" stroke-width="1.4"/>
-          <path d="M4.5 7h5M7 4.5v5" stroke="#6b7280" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-        Backend Server URL
-      </label>
-      <input
-        id="serverUrlInput"
-        class="config-input"
-        type="url"
-        value="http://localhost:3000"
-        placeholder="http://localhost:3000"
-        autocomplete="off"
-        spellcheck="false"
-      />
+      <div class="config-group">
+        <label class="config-label" for="serverUrlInput" data-i18n="backendUrl">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:middle;margin-right:4px">
+            <circle cx="7" cy="7" r="6" stroke="#6b7280" stroke-width="1.4"/>
+            <path d="M4.5 7h5M7 4.5v5" stroke="#6b7280" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Backend Server URL
+        </label>
+        <input
+          id="serverUrlInput"
+          class="config-input"
+          type="url"
+          value="http://localhost:3000"
+          placeholder="http://localhost:3000"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <div class="config-group mt-2">
+        <label class="config-label" for="projectIdInput" data-i18n="projectId">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:middle;margin-right:4px">
+            <rect x="2" y="3" width="10" height="8" rx="2" stroke="#6b7280" stroke-width="1.4"/>
+            <path d="M5 6H9" stroke="#6b7280" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Project ID
+        </label>
+        <input
+          id="projectIdInput"
+          class="config-input"
+          type="text"
+          placeholder="Required"
+          autocomplete="off"
+          spellcheck="false"
+          required
+        />
+      </div>
     </section>
 
-    <!-- ── Start Button ────────────────────────────────────────── -->
-    <button id="btnStart" class="btn btn-primary" onclick="onStartTranslation()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right:6px;vertical-align:middle">
-        <path d="M3 2.5L13 8L3 13.5V2.5Z" fill="white"/>
-      </svg>
-      Translate Full Document
-    </button>
+    <!-- ── Start Buttons ───────────────────────────────────────── -->
+    <div id="startButtonsContainer" class="start-buttons">
+      <button id="btnStartFull" class="btn btn-primary" onclick="onStartFullTranslation()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right:6px;vertical-align:middle">
+          <path d="M3 2.5L13 8L3 13.5V2.5Z" fill="white"/>
+        </svg>
+        <span data-i18n="btnFullTranslate">Translate Full Document</span>
+      </button>
+
+      <div class="page-translate-group">
+        <input id="pageNumberInput" class="page-input" type="number" min="1" value="1" title="Page Number" />
+        <button id="btnStartPage" class="btn btn-primary-outline" onclick="onStartPageTranslation()">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="margin-right:4px;vertical-align:middle">
+            <rect x="3" y="2" width="10" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 6H10M6 10H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span data-i18n="btnPageTranslate">Translate Page</span>
+        </button>
+      </div>
+    </div>
 
     <!-- ── Progress Section ────────────────────────────────────── -->
     <section id="progressSection" class="card progress-section hidden">
@@ -81,16 +113,17 @@
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-right:4px;vertical-align:middle">
           <path d="M2 2L12 12M12 2L2 12" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round"/>
         </svg>
-        Cancel
+        <span data-i18n="btnCancel">Cancel</span>
       </button>
       <button id="btnUndo" class="btn btn-secondary hidden" onclick="onUndoTranslation()">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-right:4px;vertical-align:middle">
           <path d="M2 5H8a4 4 0 0 1 0 8H5" stroke="#374151" stroke-width="1.5" stroke-linecap="round"/>
           <path d="M5 2L2 5L5 8" stroke="#374151" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Undo All
+        <span data-i18n="btnUndo">Undo All</span>
       </button>
     </div>
+
 
     <!-- ── Result Summary ─────────────────────────────────────── -->
     <section id="resultSection" class="card result-card hidden">
@@ -101,7 +134,7 @@
         </svg>
       </div>
       <div class="result-text">
-        <p class="result-title">Translation Complete!</p>
+        <p class="result-title" data-i18n="resultComplete">Translation Complete!</p>
         <p id="resultDetail" class="result-detail">0 paragraphs translated successfully.</p>
       </div>
     </section>
