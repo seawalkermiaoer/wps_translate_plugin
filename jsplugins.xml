@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jsplugins>
+    <!--
+        WPS AI 智能翻译插件
+        name:    插件唯一标识
+        type:    wps = 文字处理（Writer）
+        url:     插件入口目录（本地开发服务器，末尾必须带斜杠）
+        version: 版本号
+    -->
+    <jsplugin
+        name="WpsAiTranslate"
+        type="wps"
+        url="http://localhost:8080/"
+        version="1.0.0"
+    />
+</jsplugins>
