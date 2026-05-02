@@ -55,3 +55,30 @@ function OnTranslateClick() {
 function GetImage(control) {
   return "";
 }
+
+/**
+ * Returns the localized label for ribbon controls.
+ *
+ * @param {object} control - Ribbon control reference
+ * @returns {string} Localized label
+ */
+function GetRibbonLabel(control) {
+  var lang = "en";
+  try {
+    // 2052 is the language code for Simplified Chinese in WPS/Office
+    if (wps.Application.Language === 2052 || (typeof Application !== "undefined" && Application.Language === 2052)) {
+      lang = "zh";
+    }
+  } catch (e) {}
+
+  var dict = {
+    "AITranslateTab": { en: "AI Translation", zh: "AI 智能翻译" },
+    "translateGroup": { en: "Translation", zh: "翻译" },
+    "btnTranslateDoc": { en: "Open Translate Plugin", zh: "打开翻译插件" }
+  };
+
+  if (dict[control.Id] && dict[control.Id][lang]) {
+    return dict[control.Id][lang];
+  }
+  return "";
+}

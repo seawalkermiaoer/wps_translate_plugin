@@ -2,11 +2,11 @@
 <customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="OnAddinLoad">
   <ribbon>
     <tabs>
-      <tab id="AITranslateTab" label="AI Translation">
-        <group id="translateGroup" label="Translation">
+      <tab id="AITranslateTab" getLabel="GetRibbonLabel">
+        <group id="translateGroup" getLabel="GetRibbonLabel">
           <button
             id="btnTranslateDoc"
-            label="Translate Full Document"
+            getLabel="GetRibbonLabel"
             size="large"
             onAction="OnTranslateClick"
             image="btnIcon">
