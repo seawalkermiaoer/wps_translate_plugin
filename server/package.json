@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint src --ext .ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -18,6 +19,9 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
+    "eslint": "^10.3.0",
     "nodemon": "^3.1.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"
