@@ -49,15 +49,20 @@ function getActiveDocument() {
 // ─── UI Event Handlers ────────────────────────────────────────────────────────
 
 /**
- * Handler for the "Translate Full Document" button.
- * Validates input, resets state, kicks off the translation workflow.
+ * Helper to start translation based on mode
  */
-function onStartTranslation() {
+function _startTranslation(mode, targetPage) {
   if (_isTranslating) return;
 
   var serverUrl = document.getElementById("serverUrlInput").value.trim();
   if (!serverUrl) {
-    showError("Please enter a valid backend server URL.");
+    showError(getI18nString("backendUrl") + " is required.");
+    return;
+  }
+
+  var projectId = document.getElementById("projectIdInput").value.trim();
+  if (!projectId) {
+    showError(getI18nString("errProjectIdMissing"));
     return;
   }
 
@@ -69,14 +74,14 @@ function onStartTranslation() {
   // Update UI
   hideError();
   hideElement("resultSection");
-  hideElement("btnStart");
+  hideElement("startButtonsContainer");
   showElement("progressSection");
   showElement("actionButtons");
   showElement("btnCancel");
   hideElement("btnUndo");
   updateProgress(0, 0, "Scanning document structure...");
 
-  translateDocument(serverUrl)
+  translateDocument(serverUrl, projectId, mode, targetPage)
     .then(function (count) {
       _isTranslating = false;
       showCompletionResult(count);
@@ -89,16 +94,35 @@ function onStartTranslation() {
         // User cancelled — show partial state
         hideElement("btnCancel");
         showElement("btnUndo");
-        showElement("btnStart");
+        showElement("startButtonsContainer");
         var detailEl = document.getElementById("statusDetail");
         if (detailEl) detailEl.textContent = "Translation cancelled.";
       } else {
         showError(err.message || "An unexpected error occurred.");
-        showElement("btnStart");
+        showElement("startButtonsContainer");
         hideElement("btnCancel");
         showElement("btnUndo");
       }
     });
+}
+
+/**
+ * Handler for the "Translate Full Document" button.
+ */
+function onStartFullTranslation() {
+  _startTranslation("full_document", null);
+}
+
+/**
+ * Handler for the "Translate Page" button.
+ */
+function onStartPageTranslation() {
+  var pageNumber = parseInt(document.getElementById("pageNumberInput").value, 10);
+  if (isNaN(pageNumber) || pageNumber < 1) {
+    showError("Invalid page number.");
+    return;
+  }
+  _startTranslation("single_page", pageNumber);
 }
 
 /**
@@ -132,7 +156,7 @@ function onUndoTranslation() {
   hideElement("btnCancel");
   hideElement("btnUndo");
   hideError();
-  showElement("btnStart");
+  showElement("startButtonsContainer");
   updateProgress(0, 0, "");
 }
 
@@ -157,12 +181,14 @@ function showCompletionResult(count) {
 
 /**
  * Determines whether a paragraph should be skipped during translation.
- * Skipped: empty, whitespace-only, inside a table, or non-main story type.
+ * Skipped: empty, whitespace-only, inside a table, non-main story type, or page mismatch.
  *
  * @param {object} paragraph - WPS Paragraph object
+ * @param {string} mode - "full_document" or "single_page"
+ * @param {number|null} targetPage - Page number if single_page mode
  * @returns {boolean} true = skip this paragraph
  */
-function shouldSkipParagraph(paragraph) {
+function shouldSkipParagraph(paragraph, mode, targetPage) {
   try {
     var text = paragraph.Range.Text;
     // Skip empty / whitespace-only paragraphs (WPS appends "\r" to each paragraph)
@@ -177,6 +203,14 @@ function shouldSkipParagraph(paragraph) {
     // StoryType 1 = wdMainTextStory
     if (paragraph.Range.StoryType !== undefined && paragraph.Range.StoryType !== 1) {
       return true;
+    }
+    // Check page number for single_page mode
+    if (mode === "single_page" && targetPage != null) {
+      // wdActiveEndPageNumber = 3
+      var pageNum = paragraph.Range.Information(3);
+      if (pageNum !== targetPage) {
+        return true;
+      }
     }
     return false;
   } catch (e) {
@@ -460,9 +494,12 @@ function sendTranslationRequest(serverUrl, requestBody) {
  *   6. Update progress after each paragraph
  *
  * @param {string} serverUrl - Backend server URL
+ * @param {string} projectId - Project ID for backend mapping
+ * @param {string} mode - "full_document" or "single_page"
+ * @param {number|null} targetPage - Page number if single_page mode
  * @returns {Promise<number>} Count of successfully translated paragraphs
  */
-function translateDocument(serverUrl) {
+function translateDocument(serverUrl, projectId, mode, targetPage) {
   return new Promise(function (resolve, reject) {
     var doc, totalParagraphs, paraCount;
 
@@ -486,7 +523,7 @@ function translateDocument(serverUrl) {
         continue;
       }
 
-      if (shouldSkipParagraph(para)) continue;
+      if (shouldSkipParagraph(para, mode, targetPage)) continue;
 
       var serialized = serializeParagraph(para);
       if (!serialized.text) continue;
@@ -532,6 +569,10 @@ function translateDocument(serverUrl) {
 
       var requestBody = {
         documentId: _documentId,
+        projectId: projectId,
+        mode: mode,
+        pageNumber: targetPage,
+        targetLang: "en",
         chunkIndex: chunkIndex,
         context: previousContext,
         payload: payload,
