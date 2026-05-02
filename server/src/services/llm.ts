@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import OpenAI from 'openai';
 
 // ─── LLM Client ───────────────────────────────────────────────────────────────
