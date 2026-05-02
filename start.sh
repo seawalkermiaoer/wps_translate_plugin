@@ -37,7 +37,7 @@ FRONTEND_PID=$!
 
 # ─── 启动后端服务器 ───────────────────────────────────────────────────────────
 echo "⚙️  启动后端服务器 → http://localhost:3000"
-(cd "$SCRIPT_DIR/server" && node server.js) &
+(cd "$SCRIPT_DIR/server" && npx tsx src/server.ts) &
 BACKEND_PID=$!
 
 # ─── 等待启动 ─────────────────────────────────────────────────────────────────
