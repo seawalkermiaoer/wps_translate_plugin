@@ -5,3 +5,4 @@ node_modules/
 .openspec
 .worktrees/
 tests/
+.agent/
