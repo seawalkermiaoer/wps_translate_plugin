@@ -5,6 +5,7 @@ import {
   getMissingTags,
   stripTags,
 } from '../services/llm';
+import { logger } from '../lib/logger';
 
 const router = express.Router();
 
@@ -53,7 +54,8 @@ async function translateWithRetry(para: ParagraphPayload, context: string): Prom
     // Exponential backoff before retry attempts
     if (attempt > 1) {
       const delayMs = Math.pow(2, attempt - 1) * 1000; // 2s, 4s, 8s...
-      console.log(
+      logger.info(
+        { paragraphId, attempt, maxRetries: MAX_RETRIES, delayMs },
         `[Retry] Paragraph ${paragraphId}, attempt ${attempt}/${MAX_RETRIES}, waiting ${delayMs}ms`
       );
       await sleep(delayMs);
@@ -78,7 +80,8 @@ async function translateWithRetry(para: ParagraphPayload, context: string): Prom
 
       if (isValid) {
         if (attempt > 1) {
-          console.log(
+          logger.info(
+            { paragraphId, attempt },
             `[Translate] Paragraph ${paragraphId} succeeded on attempt ${attempt}`
           );
         }
@@ -87,18 +90,21 @@ async function translateWithRetry(para: ParagraphPayload, context: string): Prom
 
       // Tag validation failed — log and retry
       const stillMissing = getMissingTags(text, translated);
-      console.warn(
+      logger.warn(
+        { paragraphId, attempt, missingTags: stillMissing },
         `[Tag Validation] FAILED for ${paragraphId} (attempt ${attempt}/${MAX_RETRIES}): missing tags [${stillMissing.join(", ")}]`
       );
     } catch (err: any) {
-      console.error(
+      logger.error(
+        { err, paragraphId, attempt },
         `[Translate Error] ${paragraphId} attempt ${attempt}: ${err.message}`
       );
     }
   }
 
   // ── Degraded Mode ──────────────────────────────────────────────────────────
-  console.warn(
+  logger.warn(
+    { paragraphId },
     `[Degraded Mode] ${paragraphId}: returning translation without guaranteed tag preservation`
   );
 
@@ -137,7 +143,8 @@ router.post("/document-chunk", async (req: Request, res: Response) => {
 
     // ── Validate ─────────────────────────────────────────────────────────────
     if (!payload || !Array.isArray(payload) || payload.length === 0) {
-      console.warn(
+      logger.warn(
+        { documentId },
         `[Translate] Missing or empty payload from doc ${documentId}`
       );
       return res.status(400).json({
@@ -146,7 +153,8 @@ router.post("/document-chunk", async (req: Request, res: Response) => {
       });
     }
 
-    console.log(
+    logger.info(
+      { documentId, chunkIndex, paragraphCount: payload.length },
       `[Translate] Doc: ${documentId}, Chunk: ${chunkIndex}, Paragraphs: ${payload.length}`
     );
 
@@ -161,7 +169,7 @@ router.post("/document-chunk", async (req: Request, res: Response) => {
 
     return res.json({ status: "success", chunkIndex, results });
   } catch (err: any) {
-    console.error("[Translate Route Error]", err.message);
+    logger.error({ err }, "[Translate Route Error] " + err.message);
     return res.status(500).json({ status: "error", message: err.message });
   }
 });
