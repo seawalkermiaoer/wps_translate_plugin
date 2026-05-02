@@ -144,7 +144,7 @@ function onCancelTranslation() {
 function onUndoTranslation() {
   try {
     var doc = getActiveDocument();
-    doc.Undo(999); // Revert up to 999 undo steps (covers full translation)
+    doc.Undo(1); // Revert the last translation step
   } catch (e) {
     console.warn("[Undo] WPS undo failed:", e.message || e);
   }
@@ -170,6 +170,7 @@ function showCompletionResult(count) {
   hideElement("btnCancel");
   showElement("btnUndo");
   showElement("resultSection");
+  showElement("startButtonsContainer");
 
   var detailEl = document.getElementById("resultDetail");
   if (detailEl) {
