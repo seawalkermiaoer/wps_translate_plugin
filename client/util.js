@@ -16,7 +16,7 @@ const i18nDict = {
     btnFullTranslate: "Translate Full Document",
     btnPageTranslate: "Translate Page",
     btnCancel: "Cancel",
-    btnUndo: "Undo All",
+    btnUndo: "Undo Last Step",
     resultComplete: "Translation Complete!",
     errProjectIdMissing: "Project ID is required"
   },
@@ -29,7 +29,7 @@ const i18nDict = {
     btnFullTranslate: "翻译全文",
     btnPageTranslate: "翻译指定页",
     btnCancel: "取消",
-    btnUndo: "撤销全部",
+    btnUndo: "撤销上一步",
     resultComplete: "翻译完成！",
     errProjectIdMissing: "请输入项目 ID"
   }
